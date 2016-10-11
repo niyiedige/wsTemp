@@ -19,7 +19,6 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
     crawlqueue = [seedurllist]
     inputdepth=3
     D=Downloader()
-
     targetqueue = []
 
     seen = {seedurllist: 0}
@@ -40,7 +39,7 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
                 '''
                 page=D(url)
 ##need to change utf-8 to header.charset
-                html = page['html'].decode('utf-8')
+                html = page['html']
                 depth = seen[url]
                 if depth != inputdepth:
                     for link in get_links(html):
@@ -51,6 +50,7 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
                                 targetqueue.append(link)
                                 crawlqueue.append(link)
                             # there should be a optional loop
+                                #for interregex in inter...
                         elif re.search(interlinkregex, link):
                             link = urllib.parse.urljoin(seedurllist, link)
                             if link not in seen:

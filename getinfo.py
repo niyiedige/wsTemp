@@ -30,11 +30,15 @@ def getinfo(datestructure_dic,targeturls):
             if xpath!=None:
                 #z is constantly changing, can be empty some time
                 z=tree.xpath(xpath)
-                if z:
-                    t=clearstr(z[0])
-                    if t=="":
-                        t=clearstr(z[1])
-                scarpeinfo.append(t)
+                try:
+                    if z:
+                        t=clearstr(z[0])
+                        if t=="":
+                            t=clearstr(z[1])
+                    scarpeinfo.append(t)
+                except UnboundLocalError:
+                    print('t is empty,somthing wrong with xpath or link')
+                    break
 
             else:
                 scarpeinfo.append('Not available')

@@ -1,0 +1,27 @@
+[INFO  - 2016-10-11T20:15:25.616Z] GhostDriver - Main - running on port 60791
+[INFO  - 2016-10-11T20:15:26.803Z] Session [72d66df0-8fef-11e6-bbc0-41f9ef063a8f] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1","webSecurityEnabled":true}
+[INFO  - 2016-10-11T20:15:26.803Z] Session [72d66df0-8fef-11e6-bbc0-41f9ef063a8f] - page.customHeaders:  - {}
+[INFO  - 2016-10-11T20:15:26.803Z] Session [72d66df0-8fef-11e6-bbc0-41f9ef063a8f] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.1.1","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"windows-7-32bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
+[INFO  - 2016-10-11T20:15:26.803Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: 72d66df0-8fef-11e6-bbc0-41f9ef063a8f
+[ERROR - 2016-10-11T20:15:29.706Z] Session [72d66df0-8fef-11e6-bbc0-41f9ef063a8f] - page.onError - msg: TypeError: null is not an object (evaluating 'document.getElementById("hs(engageType)").value = ""')
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2016-10-11T20:15:29.707Z] Session [72d66df0-8fef-11e6-bbc0-41f9ef063a8f] - page.onError - stack:
+  global code (http://job.abchina.com/htmlfile/29701jobPublish.jsp:471)
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2016-10-11T20:15:29.739Z] Session [72d66df0-8fef-11e6-bbc0-41f9ef063a8f] - page.onError - msg: TypeError: null is not an object (evaluating 'this.ctn.getElementsByTagName')
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2016-10-11T20:15:29.739Z] Session [72d66df0-8fef-11e6-bbc0-41f9ef063a8f] - page.onError - stack:
+  init (http://job.abchina.com/js/util.js:101)
+  player (http://job.abchina.com/js/util.js:58)
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2016-10-11T20:15:30.897Z] Session [72d66df0-8fef-11e6-bbc0-41f9ef063a8f] - page.onError - msg: TypeError: null is not an object (evaluating 'document.getElementById("frm").innerHTML = msg.substring(1,end)')
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2016-10-11T20:15:30.897Z] Session [72d66df0-8fef-11e6-bbc0-41f9ef063a8f] - page.onError - stack:
+  processResponse (http://job.abchina.com/htmlfile/29701jobPublish.jsp:437)
+
+  phantomjs://platform/console++.js:263 in error

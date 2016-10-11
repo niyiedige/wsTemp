@@ -6,11 +6,11 @@ from lxml import html
 link = 'https://l3com.taleo.net/careersection/l3_ext_us/jobsearch.ftl'
 
 driver1 = webdriver.PhantomJS()
-driver1.get('http://career.cmbchina.com/Campus/Position.aspx?id=10231')
-driver1.set_window_size(1120, 550)
-s = BeautifulSoup(driver1.page_source,"lxml")
+driver1.get('http://job.icbc.com.cn/ICBC/%E4%BA%BA%E6%89%8D%E6%8B%9B%E8%81%98/default.htm')
 b=html.fromstring(driver1.page_source)
-print(b.xpath('//*[@id="rightdiv"]/div/div[1]/text()'))
+for a in b.xpath('//*[@href]'):
+    print(a.get('href'))
+
 
 
 
