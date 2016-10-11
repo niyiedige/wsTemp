@@ -11,6 +11,7 @@ def getinfo(datestructure_dic,targeturls):
     #2.get xpathlist
     #3.get the infomation needed
     D=Downloader()
+    C=Downloader(dynamic=1)
     cache=DiskCache()
     input=datestructure_dic
     targetlist=targeturls
@@ -20,11 +21,9 @@ def getinfo(datestructure_dic,targeturls):
 
     #can use pop here for multithread
     for link in targetlist:
-        scarpeinfo = []
         cache[link]=D(link)
         page = cache[link]["html"]
         tree = html.fromstring(page)
-        tempinfo=[]
         scarpeinfo=[link,input['company']]
         for xpath in targetxpath:
             if xpath!=None:
@@ -34,6 +33,19 @@ def getinfo(datestructure_dic,targeturls):
                     t=clearstr(z[0])
                     if t=="":
                         t=clearstr(z[1])
+                else:
+                    print('Not scarpable')
+                    cache.delitem(link)
+                    cache[link] = C(link)
+                    page = cache[link]["html"]
+                    tree = html.fromstring(page.page_source)
+                    z = tree.xpath(xpath)
+                    if z:
+                        t = clearstr(z[0])
+                        if t == "":
+                            t = clearstr(z[1])
+                    else:
+                        t=('Not scarpable')
                 scarpeinfo.append(t)
 
             else:

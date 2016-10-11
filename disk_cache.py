@@ -85,6 +85,16 @@ class DiskCache:
         except OSError:
             pass
 
+    def delitem(self, url):
+        """Remove the value at this key and any empty parent sub-directories
+        """
+        path = self.url_to_path(url)
+        try:
+            os.remove(path)
+            os.removedirs(os.path.dirname(path))
+        except OSError:
+            pass
+
     def url_to_path(self, url):
         """Create file system path for this URL
         """
