@@ -32,11 +32,12 @@ z=requests.get(url)
 quote=z.text.split('\r\n')[1]
 market=quote.split(',')
 marketdata=[]
-marketdata.append(market[1])
+marketdata.append(market[0])
+marketdata.append(market[4])
 marketdata.append(market[5])
-marketdata.append(market[6])
+marketdata.append(market[8])
 marketdata.append(market[9])
-marketdata.append(market[10])
+
 
 print(marketdata)
 print(scarpeinfo)
