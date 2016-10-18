@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import re
 import requests
 import datetime
-
+import openpyxl
 
 targetlist={"YiYangZhi":'http://appstore.huawei.com/app/C10401368','TongHuaShun':'http://appstore.huawei.com/app/C2861','DaZhiHui':'http://appstore.huawei.com/app/C10148748'}
 scarpeinfo = []
@@ -21,8 +21,7 @@ for name in names:
     c=re.sub("[^0-9]", "", a[0])
     print(c)
     b=name
-    temp={b:c}
-    scarpeinfo.append(temp)
+    scarpeinfo.append(c)
 
 now=datetime.datetime.now()
 enddate=str(now.year)+str(now.month)+str(now.day+1)
@@ -32,12 +31,19 @@ z=requests.get(url)
 quote=z.text.split('\r\n')[1]
 market=quote.split(',')
 marketdata=[]
-marketdata.append(market[0])
-marketdata.append(market[4])
-marketdata.append(market[5])
-marketdata.append(market[8])
-marketdata.append(market[9])
+scarpeinfo.append(market[0])
+scarpeinfo.append(market[4])
+scarpeinfo.append(market[5])
+scarpeinfo.append(market[8])
+scarpeinfo.append(market[9])
 
-
-print(marketdata)
+now=datetime.datetime.now()
+enddate=str(now.year)+str(now.month)+str(now.day+1)
+wb = openpyxl.load_workbook('result.xlsx')
+ws=wb.active
+dd=int(enddate)
+for col in ws.iter_cols(min_row=dd-20161018, max_col=8, max_row=dd-20161018):
+    for cell in col:
+        cell.value=scarpeinfo.pop()
+wb.save('result.xlsx')
 print(scarpeinfo)
