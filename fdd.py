@@ -1,4 +1,3 @@
-from lxml import html
 from linkcrawler1 import link_crawler
 from getinfo import getinfo
 from input import inputfromexcel
@@ -15,3 +14,8 @@ for raw in raws:
     print(data1)
     z=getinfo(raw,data1)
     output(z)
+
+    #add another getinfo,add a loop function or crawling funciton
+    # to change output ,you should change input like company
+    #use different method for list of job
+    #output needed to be updated
