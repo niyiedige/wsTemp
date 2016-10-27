@@ -25,7 +25,8 @@ def getinfo(datestructure_dic,targeturls):
         page = cache[link]["html"]
         tree = html.fromstring(page)
         tempinfo=[]
-        scarpeinfo=[link,input['company']]
+        scarpeinfo=[link,input['company'],input['CM']]
+        print(scarpeinfo)
         for xpath in targetxpath:
             if xpath!=None:
                 #z is constantly changing, can be empty some time
@@ -34,7 +35,9 @@ def getinfo(datestructure_dic,targeturls):
                     t=clearstr(z[0])
                     if t=="":
                         t=clearstr(z[1])
-                scarpeinfo.append(t)
+                    scarpeinfo.append(t)
+                else:
+                    scarpeinfo.append('xpath empty')
 
             else:
                 scarpeinfo.append('Not available')
