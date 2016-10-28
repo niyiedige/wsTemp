@@ -81,6 +81,13 @@ def get_links(html):
     #return requested links from html by re
 #   regex=re.compile('<a[^>]+href=["\'](.*?)["\']', re.IGNORECASE)
     regex = re.compile('<a[^>]+href=["\'](.*?)[>]', re.IGNORECASE)
+    try:
+        a=regex.findall(html)
+    except TypeError:
+        z=html.decode("utf-8")
+        a = regex.findall(z)
+    regex1=re.compile('[/](.*?)[,]', re.IGNORECASE)
+    c=[]
     a=regex.findall(html)
     regex1=re.compile('[/](.*?)[,]', re.IGNORECASE)
     c=[]
