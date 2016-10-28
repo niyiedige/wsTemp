@@ -2,12 +2,11 @@ import re
 import urllib.parse
 import urllib.request
 import requests
-import time
+
 import threading
 from lxml import html
 from downloader import Downloader
-from disk_cache import DiskCache
-import logging
+from bs4 import BeautifulSoup,SoupStrainer
 import time
 start_time = time.time()
 
@@ -19,7 +18,6 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
     crawlqueue = [seedurllist]
     inputdepth=3
     D=Downloader()
-
     targetqueue = []
 
     seen = {seedurllist: 0}
@@ -40,7 +38,7 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
                 '''
                 page=D(url)
 ##need to change utf-8 to header.charset
-                html = page['html'].decode('utf-8')
+                html = page['html']
                 depth = seen[url]
                 if depth != inputdepth:
                     for link in get_links(html):
@@ -51,11 +49,13 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
                                 targetqueue.append(link)
                                 crawlqueue.append(link)
                             # there should be a optional loop
-                        elif re.search(interlinkregex, link):
-                            link = urllib.parse.urljoin(seedurllist, link)
-                            if link not in seen:
-                                seen[link] = depth + 1
-                                crawlqueue.append(link)
+                                #for interregex in inter...
+                        elif interlinkregex:
+                            if re.search(interlinkregex, link):
+                                link = urllib.parse.urljoin(seedurllist, link)
+                                if link not in seen:
+                                    seen[link] = depth + 1
+                                    crawlqueue.append(link)
 
 
     while threads or crawlqueue:
@@ -76,50 +76,40 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
     return(targetqueue)
 
 
-'''
-##two crawlqueue is the problem
-def crawlqueue(seedurllist, interlinkregex, finallinkregex, maxdepth):
-
-    # why list list?
-    targetqueue = []
-
-
-    while crawlqueue:
-        url = crawlqueue.pop()
-        #  D=Downloader()
-        # result=D(url)
-        #  htmltemp=result["html"]
-        # html1=html.fromstring(htmltemp)
-        page = requests.get(url)
-        html = page.text
-        depth = seen[url]
-        count = 0
-        if depth != max_depth:
-            for link in get_links(html):
-                count += 1
-                print(count)
-                if re.search(finallinkregex, link):
-                    link = urllib.parse.urljoin(seedurllist, link)
-                    if link not in seen:
-                        seen[link] = depth + 1
-                        targetqueue.append(link)
-                # there should be a optional loop
-                elif re.search(interlinkregex, link):
-                    link = urllib.parse.urljoin(seedurllist, link)
-                    if link not in seen:
-                        seen[link] = depth + 1
-                        crawlqueue.append(link)
-
-    return targetqueue
-
-'''
-
 def get_links(html):
+    b = []
+    try:
+        soup=BeautifulSoup(html.decode('utf-8','ignore'),"lxml")
+    except AttributeError:
+        soup = BeautifulSoup(html, "lxml")
+    for a in soup.find_all('a', href=True):
+        b.append(a.get('href'))
+    print(b)
+    print("something")
+    wait = input("PRESS ENTER TO CONTINUE.")
     #return requested links from html by re
-    regex=re.compile('<a[^>]+href=["\'](.*?)["\']', re.IGNORECASE)
-    a=regex.findall(html)
+#   regex=re.compile('<a[^>]+href=["\'](.*?)["\']', re.IGNORECASE)
+    '''
+    regex = re.compile('<a[^>]+href=["\'](.*?)[>]', re.IGNORECASE)
+    try:
+        a=regex.findall(html)
+    except TypeError:
+        z=html.decode("utf-8")
+        a = regex.findall(z)
+    regex1=re.compile('[/](.*?)[,]', re.IGNORECASE)
+    c=[]
+    print(a)
+    for A in a:
+       b=regex1.findall(A)
+       c+=b
+
+    print(c)
+    print("something")
+    wait = input("PRESS ENTER TO CONTINUE.")
+    #three line above for testing
     # to spot javescript
-    b=[]
+
+
     for link in a:
         if re.search("/",link):
             b.append(link)
@@ -127,7 +117,5 @@ def get_links(html):
             b.append(link)
    # print(regex.findall(html))
    # print(b)
+'''
     return b
-
-#print(link_crawler('http://career.cmbchina.com/Campus/Campus.aspx',"branch=","Position"))
-#print("--- %s seconds ---" % (time.time() - start_time))
