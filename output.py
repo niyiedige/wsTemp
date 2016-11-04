@@ -2,11 +2,12 @@ import openpyxl
 from openpyxl import Workbook
 from datetime import timedelta
 import datetime as DT
+# reinstall openpxyl if anythhing happen
 
 def output(output):
     today = DT.date.today()
     threeday = today - DT.timedelta(days=3)
-    title = ['link', 'company', 'title', 'department', 'location', 'deadline', 'number', 'tag6']
+    title = ['link', 'company', 'CM','title', 'department', 'location', 'deadline','number']
     wb=openpyxl.load_workbook('result.xlsx')
     try :
         #depend on the frequency
@@ -29,8 +30,9 @@ def output(output):
     while output:
         colnum = 0
         rownum=rownum+1
+    #    print(output)
         job=output.pop()
-        print(1)
+    #    print(1)
         while job:
             colnum+=1
             a = job.pop()

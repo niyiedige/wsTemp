@@ -6,6 +6,8 @@ import time
 from datetime import datetime, timedelta
 import socket
 from disk_cache import DiskCache
+from selenium import webdriver
+import requests
 
 DEFAULT_AGENT = 'al'
 DEFAULT_DELAY = 5
@@ -35,9 +37,11 @@ class Downloader:
                 pass
             else:
                 print("in cache")
-                if self.num_retries > 0 and 500 <= result['code'] < 600:
-                    # server error so ignore result from cache and re-download
-                    result = None
+                if result['code']!=None:
+                    if self.num_retries > 0 and 500 <= result['code'] < 600:
+                        # server error so ignore result from cache and re-download
+                        result = None
+                else: result = None
         if result is None:
             print("is none")
             # result was not loaded from cache so still need to download
@@ -52,17 +56,14 @@ class Downloader:
 
     def download(self, url, headers, proxy, num_retries, data=None):
         print('Downloading:', url)
-        request = urllib.request.Request(url, data, headers or {})
-        opener = self.opener or urllib.request.build_opener()
-        if proxy:
-            proxy_params = {urlparse(url).scheme: proxy}
-            opener.add_handler(urllib.request.ProxyHandler(proxy_params))
+        driver1 = webdriver.PhantomJS()
+        driver1.get(url)
+        response=requests.get(url)
         try:
-            response = opener.open(request)
 
-            html = response.read()
+            html = driver1.page_source
 
-            code = response.code
+            code = response.status_code
         except Exception as e:
             print('Download error:', str(e))
             html = ''
