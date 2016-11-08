@@ -5,6 +5,7 @@ from urllib.parse import urlsplit
 import shutil
 import zlib
 from datetime import datetime, timedelta
+# for this function, you have to clear the cache before running on a different computer
 
 try:
     import cPickle as pickle

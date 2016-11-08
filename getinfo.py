@@ -2,6 +2,7 @@ from disk_cache import DiskCache
 from downloader import Downloader
 from lxml import html
 from clearstr import clearstr
+from fliter import fliter1
 #from input import inputfromexcel
 
 sss={"targeturls":["http://job.ccb.com/ccbjob/cn/job/notice_info.jsp?infoId=87571875&planCode=20150410&bankName=%B0%B2%BB%D5%CA%A1%B7%D6%D0%D0"],"xpathlist":['//*[@id="data"]/table/tr[2]/td/p[8]/font'],'company':'123'}
@@ -25,21 +26,35 @@ def getinfo(datestructure_dic,targeturls):
         page = cache[link]["html"]
         tree = html.fromstring(page)
         tempinfo=[]
-        scarpeinfo=[link,input['company']]
+        scarpeinfo=[link,input['company'],input['CM']]
+        print(scarpeinfo)
         for xpath in targetxpath:
             if xpath!=None:
                 #z is constantly changing, can be empty some time
                 z=tree.xpath(xpath)
                 if z:
+                    print(z)
                     t=clearstr(z[0])
                     if t=="":
-                        t=clearstr(z[1])
-                scarpeinfo.append(t)
+                        try:
+                            t=clearstr(z[1])
+                            scarpeinfo.append(t)
+                        except IndexError:
+                            scarpeinfo.append('Destination empty')
+
+                    else:
+                        scarpeinfo.append(t)
+                else:
+                    scarpeinfo.append('xpath empty')
 
             else:
                 scarpeinfo.append('Not available')
+        if fliter1(scarpeinfo)==1:
+            joblist.append(scarpeinfo)
+        else:
+            pass
     # data structure something wrong,change the dictionary with company into a list
-        joblist.append(scarpeinfo)
+  #      joblist.append(scarpeinfo)
     #info with a company tag
     return joblist
 #print(getinfo(sss))

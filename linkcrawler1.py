@@ -8,8 +8,8 @@ from lxml import html
 from downloader import Downloader
 from disk_cache import DiskCache
 import logging
-import time
-start_time = time.time()
+import socket
+
 
 def link_crawler(seedurllist,interlinkregex,finallinkregex):
   #  result=crawlqueue(seedurllist,interlinkregex,finallinkregex,maxdepth)
@@ -19,8 +19,8 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
     crawlqueue = [seedurllist]
     inputdepth=3
     D=Downloader()
-
     targetqueue = []
+
 
     seen = {seedurllist: 0}
     def crawler():
@@ -38,24 +38,32 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
                     print(url,page.status_code)
                 html = page.text
                 '''
-                page=D(url)
+                try:
+                    page=D(url)
+
 ##need to change utf-8 to header.charset
-                html = page['html'].decode('utf-8')
-                depth = seen[url]
-                if depth != inputdepth:
-                    for link in get_links(html):
-                        if re.search(finallinkregex, link):
-                            link = urllib.parse.urljoin(seedurllist, link)
-                            if link not in seen:
-                                seen[link] = depth + 1
-                                targetqueue.append(link)
-                                crawlqueue.append(link)
-                            # there should be a optional loop
-                        elif re.search(interlinkregex, link):
-                            link = urllib.parse.urljoin(seedurllist, link)
-                            if link not in seen:
-                                seen[link] = depth + 1
-                                crawlqueue.append(link)
+                    html = page['html']
+                    depth = seen[url]
+                    if depth != inputdepth:
+                        for link in get_links(html):
+                            if re.search(finallinkregex, link):
+                                link = urllib.parse.urljoin(seedurllist, link)
+                                if link not in seen:
+                                    seen[link] = depth + 1
+                                    targetqueue.append(link)
+                                    crawlqueue.append(link)
+                                # there should be a optional loop
+                                    #for interregex in inter...
+                            elif interlinkregex:
+                                if re.search(interlinkregex, link):
+                                    link = urllib.parse.urljoin(seedurllist, link)
+                                    if link not in seen:
+                                        seen[link] = depth + 1
+                                        crawlqueue.append(link)
+                except socket.error:
+                    print("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+                    pass
 
 
     while threads or crawlqueue:
@@ -76,50 +84,16 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
     return(targetqueue)
 
 
-'''
-##two crawlqueue is the problem
-def crawlqueue(seedurllist, interlinkregex, finallinkregex, maxdepth):
-
-    # why list list?
-    targetqueue = []
-
-
-    while crawlqueue:
-        url = crawlqueue.pop()
-        #  D=Downloader()
-        # result=D(url)
-        #  htmltemp=result["html"]
-        # html1=html.fromstring(htmltemp)
-        page = requests.get(url)
-        html = page.text
-        depth = seen[url]
-        count = 0
-        if depth != max_depth:
-            for link in get_links(html):
-                count += 1
-                print(count)
-                if re.search(finallinkregex, link):
-                    link = urllib.parse.urljoin(seedurllist, link)
-                    if link not in seen:
-                        seen[link] = depth + 1
-                        targetqueue.append(link)
-                # there should be a optional loop
-                elif re.search(interlinkregex, link):
-                    link = urllib.parse.urljoin(seedurllist, link)
-                    if link not in seen:
-                        seen[link] = depth + 1
-                        crawlqueue.append(link)
-
-    return targetqueue
-
-'''
-
 def get_links(html):
     #return requested links from html by re
-    regex=re.compile('<a[^>]+href=["\'](.*?)["\']', re.IGNORECASE)
+#   regex=re.compile('<a[^>]+href=["\'](.*?)["\']', re.IGNORECASE)
+    if type(html)!=str :
+        html=html.decode('utf-8')
+    regex = re.compile('<a[^>]+href=["\'](.*?)["\']', re.IGNORECASE)
     a=regex.findall(html)
     # to spot javescript
     b=[]
+
     for link in a:
         if re.search("/",link):
             b.append(link)
@@ -127,7 +101,5 @@ def get_links(html):
             b.append(link)
    # print(regex.findall(html))
    # print(b)
-    return b
 
-#print(link_crawler('http://career.cmbchina.com/Campus/Campus.aspx',"branch=","Position"))
-#print("--- %s seconds ---" % (time.time() - start_time))
+    return b
