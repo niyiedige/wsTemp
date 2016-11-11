@@ -12,7 +12,7 @@ import requests
 DEFAULT_AGENT = 'al'
 DEFAULT_DELAY = 5
 DEFAULT_RETRIES = 1
-DEFAULT_TIMEOUT = 120
+DEFAULT_TIMEOUT = 60
 cacheplace=DiskCache()
 
 class Downloader:
