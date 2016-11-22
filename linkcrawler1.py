@@ -1,16 +1,14 @@
 import re
 import urllib.parse
 import urllib.request
-import requests
 import time
 import threading
 from lxml import html
 from downloader import Downloader
-from disk_cache import DiskCache
-import logging
+from urllib.parse import urlparse
 import socket
+import gc
 
-count1 = 0
 
 def link_crawler(seedurllist,interlinkregex,finallinkregex):
   #  result=crawlqueue(seedurllist,interlinkregex,finallinkregex,maxdepth)
@@ -22,13 +20,12 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
     D=Downloader()
     targetqueue = []
 
-
-
-
+    done=[]
     seen = {seedurllist: 0}
     def crawler():
-        global count1
+        counttt=0
         while True:
+            gc.collect()
             print(threading.currentThread().getName(), 'Starting')
             try:
                 url=crawlqueue.pop()
@@ -42,38 +39,49 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
                     print(url,page.status_code)
                 html = page.text
                 '''
-                if count1>3:
-                    break
-                else:
-                    try:
-                        page=D(url)
+                try:
+                    page=D(url)
 
-    ##need to change utf-8 to header.charset
-                        html = page['html']
-                        depth = seen[url]
-                        if depth != inputdepth:
-                            for link in get_links(html):
-                                if re.search(finallinkregex, link):
-                                    link = urllib.parse.urljoin(seedurllist, link)
+##need to change utf-8 to header.charset
+                    html = page['html']
+                    depth = seen[url]
+                    if depth != inputdepth:
+                        for link in get_links(html):
+                            if re.search(finallinkregex, link):
+                                link = urllib.parse.urljoin(seedurllist, link)
+
+                                try:
+                                    c=urlparse(link).netloc
+                                    d=urlparse(link).path
+                                    truelink=urllib.parse.urljoin(urlparse(link).netloc, urlparse(link).path)
+                                    if truelink not in done or "id" in urlparse(link).query:
+                                        done.append(truelink)
+                                        if link not in seen:
+                                            seen[link] = depth + 1
+                                            targetqueue.append(link)
+                                    # there should be a optional loop
+                                        #for interregex in inter...
+                                    else:
+                                        counttt += 1
+                                        print("dup")
+                                        pass
+                                except AttributeError:
+
+                                    print(counttt)
                                     if link not in seen:
                                         seen[link] = depth + 1
                                         targetqueue.append(link)
+
+                            elif interlinkregex:
+                                if re.search(interlinkregex, link):
+                                    link = urllib.parse.urljoin(seedurllist, link)
+                                    if link not in seen:
+                                        seen[link] = depth + 1
                                         crawlqueue.append(link)
-                                    # there should be a optional loop
-                                        #for interregex in inter...
-                                elif interlinkregex:
-                                    if re.search(interlinkregex, link):
-                                        link = urllib.parse.urljoin(seedurllist, link)
-                                        if link not in seen:
-                                            seen[link] = depth + 1
-                                            crawlqueue.append(link)
-                    except socket.error:
-                        print("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
-                        count1+=1
-                        if count1>3:
-                          break
-                        else:
-                          pass
+                except socket.error:
+                    print("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+                    pass
 
 
     while threads or crawlqueue:

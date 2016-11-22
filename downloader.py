@@ -1,6 +1,4 @@
 from urllib.parse import urlparse,urlsplit
-import urllib.request
-import urllib
 import random
 import time
 from datetime import datetime, timedelta
@@ -12,7 +10,7 @@ import requests
 DEFAULT_AGENT = 'al'
 DEFAULT_DELAY = 5
 DEFAULT_RETRIES = 1
-DEFAULT_TIMEOUT = 60
+DEFAULT_TIMEOUT = 120
 cacheplace=DiskCache()
 
 class Downloader:
@@ -33,17 +31,14 @@ class Downloader:
                 result = self.cache[url]
             except KeyError:
                 # url is not available in cache
-                print("not in cache")
                 pass
             else:
-                print("in cache")
                 if result['code']!=None:
                     if self.num_retries > 0 and 500 <= result['code'] < 600:
                         # server error so ignore result from cache and re-download
                         result = None
                 else: result = None
         if result is None:
-            print("is none")
             # result was not loaded from cache so still need to download
             self.throttle.wait(url)
             proxy = random.choice(self.proxies) if self.proxies else None
@@ -56,11 +51,13 @@ class Downloader:
 
     def download(self, url, headers, proxy, num_retries, data=None):
         print('Downloading:', url)
-        driver1 = webdriver.PhantomJS()
-        driver1.get(url)
-        response=requests.get(url)
-        try:
 
+        try:
+     #       driver1 = webdriver.PhantomJS(
+      #          executable_path='/home/ji/jobcrawler/env/bin/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
+            driver1 = webdriver.PhantomJS()
+            driver1.get(url)
+            response = requests.get(url)
             html = driver1.page_source
 
             code = response.status_code
