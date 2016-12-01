@@ -25,7 +25,7 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
     def crawler():
         counttt=0
         while True:
-            gc.collect()
+
             print(threading.currentThread().getName(), 'Starting')
             try:
                 url=crawlqueue.pop()
@@ -74,17 +74,35 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
 
                             elif interlinkregex:
                                 if re.search(interlinkregex, link):
+
                                     link = urllib.parse.urljoin(seedurllist, link)
-                                    if link not in seen:
-                                        seen[link] = depth + 1
-                                        crawlqueue.append(link)
+                                    try:
+                                        truelink = urllib.parse.urljoin(urlparse(link).netloc, urlparse(link).path)
+                                        if truelink not in done or "branch" in urlparse(link).query or "jlt" in urlparse(link).query:
+                                            done.append(truelink)
+                                            if link not in seen:
+                                                seen[link] = depth + 1
+                                                crawlqueue.append(link)
+                                                # there should be a optional loop
+                                                # for interregex in inter...
+                                        else:
+                                            counttt += 1
+                                            print("dup")
+                                            pass
+                                    except AttributeError:
+
+                                        print(counttt)
+                                        if link not in seen:
+                                            seen[link] = depth + 1
+                                            crawlqueue.append(link)
+
                 except socket.error:
                     print("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
 
                     pass
 
 
-    while threads or crawlqueue:
+    while threads or crawlqueue :
         # the crawl is still active
         for thread in threads:
             if not thread.is_alive():

@@ -34,7 +34,7 @@ class DiskCache:
    # >>> cache.clear()
     """
 
-    def __init__(self, cache_dir='C:\python\cache', expires=timedelta(days=1), compress=True):
+    def __init__(self, cache_dir='cache', expires=timedelta(days=1), compress=True):
         """
         cache_dir: the root level folder for the cache
         expires: timedelta of amount of time before a cache entry is considered expired

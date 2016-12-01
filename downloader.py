@@ -6,12 +6,14 @@ import socket
 from disk_cache import DiskCache
 from selenium import webdriver
 import requests
-
+import gc
 DEFAULT_AGENT = 'al'
 DEFAULT_DELAY = 5
 DEFAULT_RETRIES = 1
 DEFAULT_TIMEOUT = 120
 cacheplace=DiskCache()
+global count
+count=0
 
 class Downloader:
     def __init__(self, delay=DEFAULT_DELAY, user_agent=DEFAULT_AGENT, proxies=None, num_retries=DEFAULT_RETRIES,
@@ -51,11 +53,13 @@ class Downloader:
 
     def download(self, url, headers, proxy, num_retries, data=None):
         print('Downloading:', url)
-
+        gc.collect()
+        #driver1 = webdriver.PhantomJS(
+        #    executable_path='/home/ubuntu/jobcrawler/env/bin/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
+        driver1 = webdriver.PhantomJS()
         try:
-     #       driver1 = webdriver.PhantomJS(
-      #          executable_path='/home/ji/jobcrawler/env/bin/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
-            driver1 = webdriver.PhantomJS()
+
+        #
             driver1.get(url)
             response = requests.get(url)
             html = driver1.page_source
@@ -63,16 +67,28 @@ class Downloader:
             code = response.status_code
         except Exception as e:
             print('Download error:', str(e))
-            html = ''
-            if hasattr(e, 'code'):
-                code = e.code
-                if num_retries > 0 and 500 <= code < 600:
-                    # retry 5XX HTTP errors
-                    return self.download(url, headers, proxy, num_retries - 1, data)
+            global count
+            count+=1
+            if count>2:
+                html='1'
             else:
-                code = None
+                html = ''
+            code=None
+        finally:
+            driver1.close()
+            driver1.quit()
         return {'html': html, 'code': code}
 
+
+'''
+    if hasattr(e, 'code'):
+        code = e.code
+        if num_retries > 0 and 500 <= code < 600:
+            # retry 5XX HTTP errors
+            return self.download(url, headers, proxy, num_retries - 1, data)
+    else:
+        code = None
+'''
 
 class Throttle:
     """Throttle downloading by sleeping between requests to same domain
