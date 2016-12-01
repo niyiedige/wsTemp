@@ -1,13 +1,12 @@
 import openpyxl
-from openpyxl import Workbook
-from datetime import timedelta
+
 import datetime as DT
 # reinstall openpxyl if anythhing happen
-
+# to modifide the output :1 change the title here 2.change the source of the output in getinfo
 def output(output):
     today = DT.date.today()
     threeday = today - DT.timedelta(days=3)
-    title = ['link', 'company', 'CM','title', 'department', 'location', 'deadline','number']
+    title = ['link', 'company', 'CM','id','title', 'department', 'location', 'date','time type']
     wb=openpyxl.load_workbook('result.xlsx')
     try :
         #depend on the frequency
@@ -37,6 +36,7 @@ def output(output):
             colnum+=1
             a = job.pop()
             ws.cell(row=rownum,column=colnum).value = a
+
 
 
     wb.save("result.xlsx")
