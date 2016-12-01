@@ -32,6 +32,7 @@ def getinfo(datestructure_dic,targeturls):
             print('Download error:', str(e))
             count+=1
             if count>2:
+                count=0
                 break
         page = cache[link]["html"]
         if page=='':

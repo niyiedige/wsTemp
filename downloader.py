@@ -71,6 +71,7 @@ class Downloader:
             count+=1
             if count>2:
                 html='1'
+                count=0
             else:
                 html = ''
             code=None
