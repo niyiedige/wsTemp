@@ -43,7 +43,7 @@ def getinfo(datestructure_dic,targeturls):
 
         scarpeinfo=[link,input['company'],input['CM']]
         for xpath in targetxpath:
-            if xpath!=None:
+            if xpath!='':
                 #z is constantly changing, can be empty some time
                 z=tree.xpath(xpath)
                 if z:

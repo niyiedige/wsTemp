@@ -1,12 +1,13 @@
 from linkcrawler1 import link_crawler
 from getinfo import getinfo
-from input import inputfromexcel
-from output import output
+
+import requests
 from outputjson import outputprep
 import json
+from inputcsv import inputfromexcel
 
-def scarpe():
-    raws=inputfromexcel('input.xlsx','info')
+def scrape():
+    raws=inputfromexcel('/home/ubuntu/crawler/jobcrawler/input11.csv')
     outputlist=[]
 
     resulttemp=[]
@@ -15,9 +16,11 @@ def scarpe():
         z=getinfo(raw,data1)
         resulttemp +=z
     result=outputprep(resulttemp)
-    j=json.dumps(result,indent=4)
-    return j
-print(scarpe())
+    payload = {"data":{"query":{"results":result}}}
+    headers = {'content-type': 'application/json'}
+    resp = requests.post('http://47.90.61.239:8000/api/v1/jobpost/', data=json.dumps(payload), headers=headers)
+
+scrape()
 
     #add another getinfo,add a loop function or crawling funciton
     # to change output ,you should change input like company

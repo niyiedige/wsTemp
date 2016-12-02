@@ -15,12 +15,12 @@ def fliter1(info):
 
         date=DT.datetime.strptime(date1,'%Y-%m-%d')
         if date>=today:
-            info[7]="Deadline"
+            info[7]="deadline"
             return 1
         elif date <= line :
             return 0
         else:
-            info[7] = "Post date"
+            info[7] = "post_date"
             return 1
 def fliter2(string):
     Techjobkeyword=['工程','技术','网络','运','维','系统','计算机','开发']
@@ -30,4 +30,4 @@ def fliter2(string):
     elif any(ext in string for ext in Otherjobkeyword):
         return("other")
     else:
-        return("Finance")
+        return("finance")
