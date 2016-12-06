@@ -21,53 +21,51 @@ def getinfo(datestructure_dic,targeturls):
     joblist=[]
     outputdata={input['company']:joblist}
     count=0
-    #can use pop here for multithread
+    stoplink=[]
+    #probable a potential bug when download error happen
     for link in targetlist:
         gc.collect()
-        try:
+        a = urlparse(link).netloc
+        if a not in stoplink:
+            getlink=D(link)
 
-            cache[link]=D(link)
 
-        except Exception as e:
-            print('Download error:', str(e))
-            count+=1
-            if count>2:
-                count=0
-                break
-        page = cache[link]["html"]
-        if page=='':
-            continue
-        elif page=='1':
-            break
-        tree = html.fromstring(page)
+            page = getlink["html"]
+            if page=='':
+                continue
+            elif page=='1':
 
-        scarpeinfo=[link,input['company'],input['CM']]
-        for xpath in targetxpath:
-            if xpath!='':
-                #z is constantly changing, can be empty some time
-                z=tree.xpath(xpath)
-                if z:
-                    print(z)
-                    t=clearstr(z[0])
-                    if t=="":
-                        try:
-                            t=clearstr(z[1])
+                stoplink.append(a)
+                continue
+            tree = html.fromstring(page)
+
+            scarpeinfo=[link,input['company'],input['career_level']]
+            for xpath in targetxpath:
+                if xpath!='':
+                    #z is constantly changing, can be empty some time
+                    z=tree.xpath(xpath)
+                    if z:
+                        print(z)
+                        t=clearstr(z[0])
+                        if t=="":
+                            try:
+                                t=clearstr(z[1])
+                                scarpeinfo.append(t)
+                            except IndexError:
+                                scarpeinfo.append('Destination empty')
+
+                        else:
                             scarpeinfo.append(t)
-                        except IndexError:
-                            scarpeinfo.append('Destination empty')
-
                     else:
-                        scarpeinfo.append(t)
-                else:
-                    scarpeinfo.append('xpath empty')
+                        scarpeinfo.append('xpath empty')
 
+                else:
+                    scarpeinfo.append('Not available')
+            scarpeinfo.append(fliter2(scarpeinfo[3]))
+            if fliter1(scarpeinfo)==1:
+                joblist.append(scarpeinfo)
             else:
-                scarpeinfo.append('Not available')
-        scarpeinfo.append(fliter2(scarpeinfo[3]))
-        if fliter1(scarpeinfo)==1:
-            joblist.append(scarpeinfo)
-        else:
-            pass
+                pass
 
     return joblist
 #print(getinfo(sss))

@@ -6,7 +6,7 @@ import datetime as DT
 def output(output):
     today = DT.date.today()
     threeday = today - DT.timedelta(days=3)
-    title = ['link', 'company', 'CM','title', 'department', 'location', 'date','time type','job type']
+    title = ['link', 'company', 'cm','title', 'department', 'location', 'date','time_type','job_type']
     wb=openpyxl.load_workbook('result.xlsx')
     try :
         #depend on the frequency

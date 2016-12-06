@@ -23,7 +23,7 @@ def fliter1(info):
             info[7] = "post_date"
             return 1
 def fliter2(string):
-    Techjobkeyword=['工程','技术','网络','运','维','系统','计算机','开发']
+    Techjobkeyword=['技术','网络','运','维','系统','计算机','开发']
     Otherjobkeyword=['代表','秘','司机','柜员','法','绩效','人力']
     if any(ext in string for ext in Techjobkeyword):
         return("tech")

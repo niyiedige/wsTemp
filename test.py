@@ -1,6 +1,7 @@
 from urllib.parse import urlparse
 
-link="http://career.cmbchina.com/Campus/Position.aspx?id=10297"
+link="http://egfbank.zhiye.com/zpdetail/310028588?p=3%5E17"
 
 print(urlparse(link).query)
 print(urlparse(link).netloc)
+print(urlparse(link).path)

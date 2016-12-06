@@ -16,7 +16,7 @@ def inputfromexcel(inputfile_str):
                          row[6], row[7], ]
             datastructure.update({'link': row[0]})
             datastructure.update({'company': row[1]})
-            datastructure.update({'CM': row[2]})
+            datastructure.update({'career_level': row[2]})
             datastructure.update({'interlinkregex': row[8]})
             datastructure.update({'finallinkregex': row[9]})
             datastructure.update({'xpathlist': xpathlist})

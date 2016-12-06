@@ -20,10 +20,12 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
     D=Downloader()
     targetqueue = []
 
-    done=[]
+
+    done = []
     seen = {seedurllist: 0}
     def crawler():
-        counttt=0
+
+        counttt = 0
         while True:
 
             print(threading.currentThread().getName(), 'Starting')
@@ -51,23 +53,24 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
                                 link = urllib.parse.urljoin(seedurllist, link)
 
                                 try:
-                                    c=urlparse(link).netloc
-                                    d=urlparse(link).path
                                     truelink=urllib.parse.urljoin(urlparse(link).netloc, urlparse(link).path)
                                     if truelink not in done or "id" in urlparse(link).query:
                                         done.append(truelink)
                                         if link not in seen:
                                             seen[link] = depth + 1
-                                            targetqueue.append(link)
+                                            if "ccb" or 'cmb' in url:
+                                             targetqueue.append(link)
+                                            else:
+                                                targetqueue.append(truelink)
                                     # there should be a optional loop
                                         #for interregex in inter...
                                     else:
-                                        counttt += 1
+
                                         print("dup")
                                         pass
                                 except AttributeError:
 
-                                    print(counttt)
+
                                     if link not in seen:
                                         seen[link] = depth + 1
                                         targetqueue.append(link)
@@ -78,7 +81,7 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
                                     link = urllib.parse.urljoin(seedurllist, link)
                                     try:
                                         truelink = urllib.parse.urljoin(urlparse(link).netloc, urlparse(link).path)
-                                        if truelink not in done or "branch" in urlparse(link).query or "jlt" in urlparse(link).query:
+                                        if truelink not in done or "branch" in urlparse(link).query or "jlt" in link:
                                             done.append(truelink)
                                             if link not in seen:
                                                 seen[link] = depth + 1
@@ -86,18 +89,19 @@ def link_crawler(seedurllist,interlinkregex,finallinkregex):
                                                 # there should be a optional loop
                                                 # for interregex in inter...
                                         else:
-                                            counttt += 1
                                             print("dup")
                                             pass
                                     except AttributeError:
 
-                                        print(counttt)
                                         if link not in seen:
                                             seen[link] = depth + 1
                                             crawlqueue.append(link)
 
                 except socket.error:
+                    counttt+=1
                     print("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                    if counttt>=3:
+                        continue
 
                     pass
 
