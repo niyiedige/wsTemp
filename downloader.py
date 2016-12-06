@@ -54,9 +54,9 @@ class Downloader:
     def download(self, url, headers, proxy, num_retries, data=None):
         print('Downloading:', url)
         gc.collect()
-        #driver1 = webdriver.PhantomJS(
-        #    executable_path='/home/ubuntu/jobcrawler/env/bin/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
-        driver1 = webdriver.PhantomJS()
+        driver1 = webdriver.PhantomJS(
+            executable_path='/home/ubuntu/crawler/env/bin/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
+        #driver1 = webdriver.PhantomJS()
         try:
 
         #

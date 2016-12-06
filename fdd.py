@@ -7,10 +7,10 @@ import json
 from inputcsv import inputfromexcel
 from output import output
 
-#to run on server/pc change the line on scrape and downloader, delete output ,change cache expire time
+#to run on server/pc change the 1.line on scrape and 2.downloader, 3.delete output ,4.change cache expire time
 def scrape():
-    raws=inputfromexcel('C:\python\wetemp\wsTemp-niyiedige-patch-3/input11.csv')
-#    raws=inputfromexcel('/home/ubuntu/crawler/jobcrawler/input11.csv')
+    #raws=inputfromexcel('C:\python\wetemp\wsTemp-niyiedige-patch-3/input11.csv')
+    raws=inputfromexcel('/home/ubuntu/crawler/jobcrawler/input11.csv')
     outputlist=[]
 
     resulttemp=[]
@@ -21,10 +21,10 @@ def scrape():
             resulttemp +=z
     finally:
         result=outputprep(resulttemp)
-        payload = {"data":{"query":{"results":result}}}
+        payload = {"results":result}
         headers = {'content-type': 'application/json'}
         resp = requests.post('http://47.90.61.239:8000/api/v1/jobposts/', data=json.dumps(payload), headers=headers)
-        output(resulttemp)
+        #output(resulttemp)
 scrape()
 
     #add another getinfo,add a loop function or crawling funciton
